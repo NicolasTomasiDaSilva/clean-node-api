@@ -1,11 +1,11 @@
 import { MissingParamError } from "../errors/missing-param-error";
-import { HttpRequest, HttpResponse } from "../protocols/http";
+import { IHttpRequest, IHttpResponse } from "../protocols/http";
 import { SignUpController } from "./signup";
 
 describe("Signup Controller", () => {
   test("should return 400 if no name is provided", () => {
     const sut = new SignUpController();
-    const httpRequest: HttpRequest = {
+    const httpRequest: IHttpRequest = {
       body: {
         // name: "any_name",
         email: "any_email",
@@ -13,14 +13,14 @@ describe("Signup Controller", () => {
         passwordConfirmation: "any_password",
       },
     };
-    const httpResponse: HttpResponse = sut.handle(httpRequest);
+    const httpResponse: IHttpResponse = sut.handle(httpRequest);
     expect(httpResponse.statusCode).toBe(400);
     expect(httpResponse.body).toEqual(new MissingParamError("name"));
   });
 });
 
 describe("Signup Controller", () => {
-  test("should return 400 if no name is provided", () => {
+  test("should return 400 if no email is provided", () => {
     const sut = new SignUpController();
     const httpRequest = {
       body: {

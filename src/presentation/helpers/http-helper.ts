@@ -1,6 +1,6 @@
-import { HttpResponse } from "../protocols/http";
+import { IHttpResponse } from "../protocols/http";
 
-export function badRequest(error: Error): HttpResponse {
+export function badRequest(error: Error): IHttpResponse {
   return {
     statusCode: 400,
     body: error,
