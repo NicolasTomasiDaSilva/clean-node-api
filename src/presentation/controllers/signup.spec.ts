@@ -1,12 +1,16 @@
-import { InvalidParamError } from "../errors/invalid-param-error";
-import { MissingParamError } from "../errors/missing-param-error";
-import { ServerError } from "../errors/server-error";
+import {
+  InvalidParamError,
+  MissingParamError,
+  ServerError,
+} from "../errors/index";
 import { serverError } from "../helpers/http-helper";
-import { IEmailValidator } from "../protocols/email-validator";
-import { IHttpRequest, IHttpResponse } from "../protocols/http";
-import { SignUpController } from "./signup";
+import {
+  IEmailValidator,
+  IHttpRequest,
+  IHttpResponse,
+} from "../protocols/index";
 
-interface SutTypes {}
+import { SignUpController } from "./signup";
 
 class EmailValidatorStub implements IEmailValidator {
   isValid(value: string): boolean {
