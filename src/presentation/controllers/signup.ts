@@ -33,12 +33,12 @@ export class SignUpController implements IController {
       if (!this.emailValidator.isValid(email)) {
         return badRequest(new InvalidParamError("email"));
       }
-      const newUser = this.addAccount.add({
+      const account = this.addAccount.add({
         name,
         email,
         password,
       });
-      return ok(newUser);
+      return ok(account);
     } catch (error) {
       return serverError();
     }
