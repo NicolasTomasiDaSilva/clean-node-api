@@ -1,12 +1,12 @@
-import { IAddAccount } from "../../domain/usecases/addAccount";
 import { InvalidParamError, MissingParamError } from "../errors/index";
-import { badRequest, serverError } from "../helpers/http-helper";
+import { badRequest, ok, serverError } from "../helpers/http-helper";
 import {
-  IEmailValidator,
   IHttpRequest,
   IHttpResponse,
   IController,
-} from "../protocols/index";
+  IEmailValidator,
+  IAddAccount,
+} from "../controllers/signup-protocols";
 
 export class SignUpController implements IController {
   constructor(
@@ -38,6 +38,7 @@ export class SignUpController implements IController {
         email,
         password,
       });
+      return ok(newUser);
     } catch (error) {
       return serverError();
     }

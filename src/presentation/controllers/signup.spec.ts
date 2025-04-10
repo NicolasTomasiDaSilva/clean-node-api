@@ -1,5 +1,3 @@
-import { AccountModel } from "../../domain/models/account";
-import { AddAccountModel, IAddAccount } from "../../domain/usecases/addAccount";
 import {
   InvalidParamError,
   MissingParamError,
@@ -10,7 +8,10 @@ import {
   IEmailValidator,
   IHttpRequest,
   IHttpResponse,
-} from "../protocols/index";
+  IAddAccount,
+  AddAccountModel,
+  AccountModel,
+} from "../controllers/signup-protocols";
 
 import { SignUpController } from "./signup";
 
@@ -91,7 +92,7 @@ describe("Signup Controller", () => {
 });
 
 describe("Signup Controller", () => {
-  test("should return 400 if no email is provided password != passwordConfirmation", () => {
+  test("should return 400 if  provided password != passwordConfirmation", () => {
     const { sut } = makeSut();
     const httpRequest = {
       body: {
@@ -167,6 +168,26 @@ describe("Signup Controller", () => {
 });
 
 describe("Signup Controller", () => {
+  test("should return 500 if addAccount throws", () => {
+    const { sut, addAccountStub } = makeSut();
+    jest.spyOn(addAccountStub, "add").mockImplementationOnce(() => {
+      throw new Error();
+    });
+
+    const httpRequest = {
+      body: {
+        name: "any_name",
+        email: "invalid_email",
+        password: "any_password",
+        passwordConfirmation: "any_password",
+      },
+    };
+    const httpResponse = sut.handle(httpRequest);
+    expect(httpResponse.body).toEqual(new ServerError());
+  });
+});
+
+describe("Signup Controller", () => {
   test("should call AddAccount with correct values ", () => {
     const { sut, emailValidatorStub, addAccountStub } = makeSut();
     const addAccountSpy = jest.spyOn(addAccountStub, "add");
@@ -183,6 +204,28 @@ describe("Signup Controller", () => {
     expect(addAccountSpy).toHaveBeenCalledWith({
       name: "any_name",
       email: "any_email",
+      password: "any_password",
+    });
+  });
+});
+
+describe("Signup Controller", () => {
+  test("should return 200 if valid data is provide", () => {
+    const { sut } = makeSut();
+
+    const httpRequest = {
+      body: {
+        name: "any_name",
+        email: "valid_email",
+        password: "any_password",
+        passwordConfirmation: "any_password",
+      },
+    };
+    const httpResponse = sut.handle(httpRequest);
+    expect(httpResponse.body).toEqual({
+      id: "any_id",
+      name: "any_name",
+      email: "valid_email",
       password: "any_password",
     });
   });
